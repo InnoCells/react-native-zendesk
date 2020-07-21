@@ -15,6 +15,10 @@ import zendesk.support.guide.HelpCenterActivity;
 import zendesk.support.request.RequestActivity;
 import zendesk.support.requestlist.RequestListActivity;
 
+import com.zendesk.service.ErrorResponse;
+import com.zendesk.service.ZendeskCallback;
+import com.facebook.react.bridge.Promise;
+
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class RNZendeskBridge extends ReactContextBaseJavaModule {
+    public static final String MODULE_NAME = "RNZendesk";
 
     public RNZendeskBridge(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -31,7 +36,7 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "RNZendesk";
+        return MODULE_NAME;
     }
 
     // MARK: - Initialization
@@ -100,5 +105,35 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getReactApplicationContext().startActivity(intent);
+    }
+
+    @ReactMethod
+    public void unregisterPushToken(final Promise promise) {
+        Zendesk.INSTANCE.provider().pushRegistrationProvider().unregisterDevice(new ZendeskCallback<Void>() {
+            @Override
+            public void onSuccess(final Void response) { 
+                promise.resolve(null);
+            }
+
+            @Override
+            public void onError(ErrorResponse errorResponse) { 
+                promise.reject(MODULE_NAME, "Push token can't be unregister: " + errorResponse);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void registerPushToken(String token, final Promise promise) {
+       Zendesk.INSTANCE.provider().pushRegistrationProvider().registerWithDeviceIdentifier(token, new ZendeskCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                promise.resolve(null);
+             }
+
+            @Override
+            public void onError(ErrorResponse errorResponse) { 
+                promise.reject(MODULE_NAME, "Push token can't be register: " + errorResponse);
+            }
+       });
     }
 }

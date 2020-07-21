@@ -30,7 +30,7 @@ interface HelpCenterOptions {
   hideContactSupport?: boolean
 }
 
-export function showHelpCenter(options: HelpCenterOptions) {
+export function showHelpCenter(options: HelpCenterOptions = { hideContactSupport: false }) {
   RNZendesk.showHelpCenter(options)
 }
 
@@ -44,4 +44,12 @@ export function showNewTicket(options: NewTicketOptions) {
 
 export function showTicketList() {
   RNZendesk.showTicketList()
+}
+
+export async function unregisterPushToken() {
+  return RNZendesk.unregisterPushToken()
+}
+
+export async function registerPushToken(deviceToken: string) {
+  return RNZendesk.registerPushToken(deviceToken)
 }

@@ -26,4 +26,9 @@ RCT_EXTERN_METHOD(showHelpCenter:(NSDictionary *)options);
 RCT_EXTERN_METHOD(showNewTicket:(NSDictionary *)options);
 RCT_EXTERN_METHOD(showTicketList);
 
+// MARK: - Push tokens
+
+RCT_EXTERN_METHOD(registerPushToken);
+RCT_EXTERN_METHOD(unregisterPushToken);
+
 @end

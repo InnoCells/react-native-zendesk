@@ -11,6 +11,7 @@ import Foundation
 import SupportSDK
 import ZendeskCoreSDK
 import CommonUISDK
+import ZDKPushProvider
 
 @objc(RNZendesk)
 class RNZendesk: RCTEventEmitter {
@@ -99,6 +100,20 @@ class RNZendesk: RCTEventEmitter {
             
             let nvc = UINavigationController(rootViewController: requestListController)
             UIApplication.shared.keyWindow?.rootViewController?.present(nvc, animated: true)
+        }
+    }
+
+    @objc(unregisterPushToken)
+    func unregisterPushToken() {
+        ZDKPushProvider(zendesk: Zendesk.instance!).unregisterForPush();
+    }
+
+    @objc(registerPushToken:)
+    func registerPushToken(token: String) {
+        ZDKPushProvider(zendesk: Zendesk.instance).register(deviceIdentifier: token, locale: @"es") { (pushResponse, error) in
+            print("Couldn't register device: \(token). Error: \(error)")
+        } else {
+            print("Successfully registered device: \(token)")
         }
     }
 }
