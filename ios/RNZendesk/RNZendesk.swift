@@ -11,7 +11,6 @@ import Foundation
 import SupportSDK
 import ZendeskCoreSDK
 import CommonUISDK
-import ZDKPushProvider
 
 @objc(RNZendesk)
 class RNZendesk: RCTEventEmitter {
@@ -110,10 +109,9 @@ class RNZendesk: RCTEventEmitter {
 
     @objc(registerPushToken:)
     func registerPushToken(token: String) {
-        ZDKPushProvider(zendesk: Zendesk.instance).register(deviceIdentifier: token, locale: @"es") { (pushResponse, error) in
-            print("Couldn't register device: \(token). Error: \(error)")
-        } else {
-            print("Successfully registered device: \(token)")
-        }
+        let locale = NSLocale.preferredLanguages.first ?? "en";
+        ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: token, locale: locale) { (pushResponse, error) in
+            print("Couldn't register device");
+        };
     }
 }
