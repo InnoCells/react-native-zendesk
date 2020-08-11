@@ -48,8 +48,8 @@ export function showTicketList() {
   RNZendesk.showTicketList()
 }
 
-export function unregisterPushToken() {
-  return RNZendesk.unregisterPushToken()
+export function unregisterPushToken(config: { appId: string; clientId: string; zendeskUrl: string }) {
+  return RNZendesk.unregisterPushToken(config)
 }
 
 export function registerPushToken(deviceToken: string) {
