@@ -32,8 +32,8 @@ class RNZendesk: RCTEventEmitter {
     
     // MARK: - Initialization
 
-    @objc(initialize:)
-    func initialize(config: [String: Any]) {
+    @objc(initializeInstance:)
+    func initializeInstance(config: [String: Any]) -> Void {
         guard
             let appId = config["appId"] as? String,
             let clientId = config["clientId"] as? String,
@@ -41,6 +41,19 @@ class RNZendesk: RCTEventEmitter {
         
         Zendesk.initialize(appId: appId, clientId: clientId, zendeskUrl: zendeskUrl)
         Support.initialize(withZendesk: Zendesk.instance)
+    }
+
+    @objc(initializeAuth:)
+    func initializeAuth(config: [String: Any]) -> Void {
+        guard
+            let deviceToken = config["deviceToken"] as? String,
+            let userId = config["userId"] as? String else { return }
+        
+        initializeInstance(config: config)
+
+        identifyJWT(token: userId)
+
+        registerPushToken(token: deviceToken)
     }
     
     // MARK: - Indentification
@@ -102,16 +115,23 @@ class RNZendesk: RCTEventEmitter {
         }
     }
 
-    @objc(unregisterPushToken)
-    func unregisterPushToken() {
+    @objc(unregisterPushToken:)
+    func unregisterPushToken(config: [String: Any]) {
+        if !Zendesk.instance {
+            initializeInstance(config)
+        }
         ZDKPushProvider(zendesk: Zendesk.instance!).unregisterForPush();
     }
 
     @objc(registerPushToken:)
-    func registerPushToken(token: String) {
+    func registerPushToken(token: String) -> Void {
         let locale = NSLocale.preferredLanguages.first ?? "en";
         ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: token, locale: locale) { (pushResponse, error) in
-            print("Couldn't register device");
+            if error {
+                return false
+            } else {
+                return true
+            }
         };
     }
 }

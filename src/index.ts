@@ -6,12 +6,14 @@ interface Config {
   appId: string
   clientId: string
   zendeskUrl: string
+  userId: string
+  deviceToken: string
 }
 
 // MARK: - Initialization
 
 export function initialize(config: Config) {
-  RNZendesk.initialize(config)
+  RNZendesk.initializeAuth(config)
 }
 
 // MARK: - Indentification
@@ -46,10 +48,10 @@ export function showTicketList() {
   RNZendesk.showTicketList()
 }
 
-export async function unregisterPushToken() {
+export function unregisterPushToken() {
   return RNZendesk.unregisterPushToken()
 }
 
-export async function registerPushToken(deviceToken: string) {
+export function registerPushToken(deviceToken: string) {
   return RNZendesk.registerPushToken(deviceToken)
 }

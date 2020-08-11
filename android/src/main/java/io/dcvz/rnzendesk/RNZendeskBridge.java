@@ -39,16 +39,25 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
         return MODULE_NAME;
     }
 
-    // MARK: - Initialization
+    private ReadableMap zendeskInstance;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @ReactMethod
-    public void initialize(ReadableMap config) {
-        String appId = config.getString("appId");
-        String zendeskUrl = config.getString("zendeskUrl");
-        String clientId = config.getString("clientId");
-        Zendesk.INSTANCE.init(getReactApplicationContext(), zendeskUrl, appId, clientId);
+    public void initializeInstance(ReadableMap config) {
+        Zendesk.INSTANCE.init(getReactApplicationContext(), config.getString("zendeskUrl"), config.getString("appId"), config.getString("clientId"));
         Support.INSTANCE.init(Zendesk.INSTANCE);
+
+        return Zendesk.INSTANCE;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @ReactMethod
+    public void initializeAuth(ReadableMap config) {
+        this.zendeskInstance = initializeInstance(config);
+        
+        identifyJWT(config.getString("userId"))
+
+        registerPushToken(config.getString("deviceToken"))
     }
 
     // MARK: - Indentification
@@ -56,7 +65,7 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     @ReactMethod
     public void identifyJWT(String token) {
         JwtIdentity identity = new JwtIdentity(token);
-        Zendesk.INSTANCE.setIdentity(identity);
+        this.zendeskInstance.setIdentity(identity);
     }
 
     @ReactMethod
@@ -66,7 +75,7 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
             .withEmailIdentifier(email)
             .build();
 
-        Zendesk.INSTANCE.setIdentity(identity);
+        this.zendeskInstance.setIdentity(identity);
     }
 
     // MARK: - UI Methods
@@ -108,31 +117,34 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void unregisterPushToken(final Promise promise) {
-        Zendesk.INSTANCE.provider().pushRegistrationProvider().unregisterDevice(new ZendeskCallback<Void>() {
+    public void unregisterPushToken(ReadableMap config) {
+        if(this.zendeskInstance == null) {
+            this.zendeskInstance = initializeInstance(config);
+        }
+        this.zendeskInstance.provider().pushRegistrationProvider().unregisterDevice(new ZendeskCallback<Void>() {
             @Override
-            public void onSuccess(final Void response) { 
-                promise.resolve(null);
+            public boolean onSuccess(final Void response) { 
+                return true;
             }
 
             @Override
-            public void onError(ErrorResponse errorResponse) { 
-                promise.reject(MODULE_NAME, "Push token can't be unregister: " + errorResponse);
+            public boolean onError(ErrorResponse errorResponse) { 
+                return  false;
             }
         });
     }
 
     @ReactMethod
-    public void registerPushToken(String token, final Promise promise) {
-       Zendesk.INSTANCE.provider().pushRegistrationProvider().registerWithDeviceIdentifier(token, new ZendeskCallback<String>() {
+    public void registerPushToken(String token) {
+       this.zendeskInstance.provider().pushRegistrationProvider().registerWithDeviceIdentifier(token, new ZendeskCallback<String>() {
             @Override
-            public void onSuccess(String result) {
-                promise.resolve(null);
+            public boolean onSuccess(String result) {
+                return true;
              }
 
             @Override
-            public void onError(ErrorResponse errorResponse) { 
-                promise.reject(MODULE_NAME, "Push token can't be register: " + errorResponse);
+            public boolean onError(ErrorResponse errorResponse) { 
+               return false;
             }
        });
     }
