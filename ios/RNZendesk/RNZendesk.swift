@@ -32,7 +32,6 @@ class RNZendesk: RCTEventEmitter {
     @objc(initialize:)
     func initialize(config: [String: Any]) -> Void {
         guard
-            let deviceToken = config["deviceToken"] as? String,
             let appId = config["appId"] as? String,
             let clientId = config["clientId"] as? String,
             let zendeskUrl = config["zendeskUrl"] as? String,
@@ -43,11 +42,6 @@ class RNZendesk: RCTEventEmitter {
 
         let identity = Identity.createJwt(token: userId)
         Zendesk.instance?.setIdentity(identity)
-
-        let locale = NSLocale.preferredLanguages.first ?? "en";
-        ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: deviceToken, locale: locale) { (pushResponse, error) in
-           
-        };
     }
     
     @objc(showHelpCenter:)
@@ -65,5 +59,13 @@ class RNZendesk: RCTEventEmitter {
         if Zendesk.instance != nil {
             ZDKPushProvider(zendesk: Zendesk.instance!).unregisterForPush();
         }
+    }
+
+    @objc(registerPushToken:)
+    func registerPushToken(token: String) {
+        let locale = NSLocale.preferredLanguages.first ?? "en";
+        ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: token, locale: locale) { (pushResponse, error) in
+           
+        };
     }
 }

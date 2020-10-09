@@ -7,7 +7,6 @@ interface Config {
   clientId: string
   zendeskUrl: string
   userId: string
-  deviceToken: string
 }
 
 export function initialize(config: Config) {
@@ -24,4 +23,8 @@ export function showHelpCenter(options: HelpCenterOptions = { hideContactSupport
 
 export function unregisterPushToken() {
   return RNZendesk.unregisterPushToken()
+}
+
+export function registerPushToken(deviceToken: string) {
+  return RNZendesk.registerPushToken(deviceToken)
 }

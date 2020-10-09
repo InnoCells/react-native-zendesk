@@ -40,18 +40,6 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
         
         JwtIdentity identity = new JwtIdentity(config.getString("userId"));
         Zendesk.INSTANCE.setIdentity(identity);
-
-        Zendesk.INSTANCE.provider().pushRegistrationProvider().registerWithDeviceIdentifier(config.getString("deviceToken"), new ZendeskCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-
-            }
-
-            @Override
-            public void onError(ErrorResponse errorResponse) {
-
-            }
-        });
     }
 
     @ReactMethod
@@ -71,6 +59,23 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
                 @Override
                 public void onError(ErrorResponse errorResponse) {
 
+                }
+            });
+        }
+    }
+
+    @ReactMethod
+     public void registerPushToken(String token, final) {
+        if(Zendesk.INSTANCE.provider() != null) {
+            Zendesk.INSTANCE.provider().pushRegistrationProvider().registerWithDeviceIdentifier(token, new ZendeskCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    
+                }
+
+                @Override
+                public void onError(ErrorResponse errorResponse) { 
+                    
                 }
             });
         }
