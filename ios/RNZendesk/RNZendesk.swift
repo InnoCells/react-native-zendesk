@@ -33,10 +33,10 @@ class RNZendesk: RCTEventEmitter {
     func initialize(config: [String: Any]) -> Void {
         guard
             let deviceToken = config["deviceToken"] as? String,
-            let userId = config["userId"] as? String else { return },
             let appId = config["appId"] as? String,
             let clientId = config["clientId"] as? String,
-            let zendeskUrl = config["zendeskUrl"] as? String else { return }
+            let zendeskUrl = config["zendeskUrl"] as? String,
+            let userId = config["userId"] as? String else { return }
         
         Zendesk.initialize(appId: appId, clientId: clientId, zendeskUrl: zendeskUrl)
         Support.initialize(withZendesk: Zendesk.instance)
