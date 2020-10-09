@@ -45,7 +45,7 @@ class RNZendesk: RCTEventEmitter {
         Zendesk.instance?.setIdentity(identity)
 
         let locale = NSLocale.preferredLanguages.first ?? "en";
-        ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: deviceToken, locale: locale) { (pushResponse, error) in
+        ZDKPushProvider(zendesk: Zendesk.instance).register(deviceIdentifier: deviceToken, locale: locale) { (pushResponse, error) in
            
         };
     }
@@ -53,18 +53,10 @@ class RNZendesk: RCTEventEmitter {
     @objc(showHelpCenter:)
     func showHelpCenter(with options: [String: Any]) {
         DispatchQueue.main.async {
-            let hcConfig = HelpCenterUiConfiguration()
-
-            if let hideContactSupport = options["hideContactSupport"] as? Bool {
-                hcConfig.showContactOptions = !hideContactSupport
-            } else {
-                hcConfig.showContactOptions = true
-            }
-
-            let helpCenter = HelpCenterUi.buildHelpCenterOverviewUi(withConfigs: [hcConfig])
+            let helpCenter = HelpCenterUi.buildHelpCenterOverviewUi(withConfigs: [])
             
             let nvc = UINavigationController(rootViewController: helpCenter)
-            UIApplication.shared.keyWindow?.rootViewController?.present(nvc, animated: true, completion: nil)
+            UIApplication.shared.keyWindow?.rootViewController?.present(nvc, animated: true)
         }
     }
 
