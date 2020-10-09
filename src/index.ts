@@ -13,12 +13,8 @@ export function initialize(config: Config) {
   RNZendesk.initialize(config)
 }
 
-interface HelpCenterOptions {
-  hideContactSupport?: boolean
-}
-
-export function showHelpCenter(options: HelpCenterOptions = { hideContactSupport: false }) {
-  RNZendesk.showHelpCenter(options)
+export function showHelpCenter() {
+  RNZendesk.showHelpCenter()
 }
 
 export function unregisterPushToken() {

@@ -43,7 +43,7 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void showHelpCenter(ReadableMap options) {
+    public void showHelpCenter() {
         HelpCenterActivity.builder().show(context.getCurrentActivity());
     }
     

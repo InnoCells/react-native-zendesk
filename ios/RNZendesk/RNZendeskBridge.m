@@ -13,7 +13,7 @@
 
 RCT_EXTERN_METHOD(initialize:(NSDictionary *)config);
 
-RCT_EXTERN_METHOD(showHelpCenter:(NSDictionary *)options);
+RCT_EXTERN_METHOD(showHelpCenter);
 
 RCT_EXTERN_METHOD(registerPushToken:(NSString)token);
 RCT_EXTERN_METHOD(unregisterPushToken);

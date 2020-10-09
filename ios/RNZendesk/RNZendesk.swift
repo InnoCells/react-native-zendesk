@@ -44,8 +44,8 @@ class RNZendesk: RCTEventEmitter {
         Zendesk.instance?.setIdentity(identity)
     }
     
-    @objc(showHelpCenter:)
-    func showHelpCenter(with options: [String: Any]) {
+    @objc(showHelpCenter)
+    func showHelpCenter() {
         DispatchQueue.main.async {
             let helpCenter = HelpCenterUi.buildHelpCenterOverviewUi(withConfigs: [])
             
