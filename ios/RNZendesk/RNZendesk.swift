@@ -117,8 +117,8 @@ class RNZendesk: RCTEventEmitter {
 
     @objc(unregisterPushToken:)
     func unregisterPushToken(config: [String: Any]) {
-        if !Zendesk.instance {
-            initializeInstance(config)
+        if Zendesk.instance == nil {
+            initializeInstance(config: config)
         }
         ZDKPushProvider(zendesk: Zendesk.instance!).unregisterForPush();
     }
@@ -127,11 +127,7 @@ class RNZendesk: RCTEventEmitter {
     func registerPushToken(token: String) -> Void {
         let locale = NSLocale.preferredLanguages.first ?? "en";
         ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: token, locale: locale) { (pushResponse, error) in
-            if error {
-                return false
-            } else {
-                return true
-            }
+           
         };
     }
 }

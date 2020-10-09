@@ -55,9 +55,9 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     public void initializeAuth(ReadableMap config) {
         this.zendeskInstance = initializeInstance(config);
         
-        identifyJWT(config.getString("userId"))
+        identifyJWT(config.getString("userId"));
 
-        registerPushToken(config.getString("deviceToken"))
+        registerPushToken(config.getString("deviceToken"));
     }
 
     // MARK: - Indentification
