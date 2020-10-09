@@ -11,19 +11,9 @@
 
 @interface RCT_EXTERN_REMAP_MODULE(RNZendesk, RNZendesk, NSObject)
 
-// MARK: - Initialization
-
 RCT_EXTERN_METHOD(initialize:(NSDictionary *)config);
 
-// MARK: - Indentification
-
-RCT_EXTERN_METHOD(identifyJWT:(NSString *)token);
-
-// MARK: - UI Methods
-
 RCT_EXTERN_METHOD(showHelpCenter:(NSDictionary *)options);
-
-// MARK: - Push tokens
 
 RCT_EXTERN_METHOD(unregisterPushToken);
 

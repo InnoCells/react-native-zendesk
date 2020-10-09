@@ -28,44 +28,27 @@ class RNZendesk: RCTEventEmitter {
     override func supportedEvents() -> [String] {
         return []
     }
-    
-    
-    // MARK: - Initialization
 
-    @objc(initializeInstance:)
-    func initializeInstance(config: [String: Any]) -> Void {
+    @objc(initialize:)
+    func initialize(config: [String: Any]) -> Void {
         guard
+            let deviceToken = config["deviceToken"] as? String,
+            let userId = config["userId"] as? String else { return },
             let appId = config["appId"] as? String,
             let clientId = config["clientId"] as? String,
             let zendeskUrl = config["zendeskUrl"] as? String else { return }
         
         Zendesk.initialize(appId: appId, clientId: clientId, zendeskUrl: zendeskUrl)
         Support.initialize(withZendesk: Zendesk.instance)
-    }
 
-    @objc(initialize:)
-    func initialize(config: [String: Any]) -> Void {
-        guard
-            let deviceToken = config["deviceToken"] as? String,
-            let userId = config["userId"] as? String else { return }
-        
-        initializeInstance(config: config)
-
-        identifyJWT(token: userId)
-
-        registerPushToken(token: deviceToken)
-    }
-    
-    // MARK: - Indentification
-    
-    @objc(identifyJWT:)
-    func identifyJWT(token: String?) {
-        guard let token = token else { return }
-        let identity = Identity.createJwt(token: token)
+        let identity = Identity.createJwt(token: userId)
         Zendesk.instance?.setIdentity(identity)
+
+        let locale = NSLocale.preferredLanguages.first ?? "en";
+        ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: deviceToken, locale: locale) { (pushResponse, error) in
+           
+        };
     }
-    
-    // MARK: - UI Methods
     
     @objc(showHelpCenter:)
     func showHelpCenter(with options: [String: Any]) {
@@ -87,17 +70,8 @@ class RNZendesk: RCTEventEmitter {
 
     @objc(unregisterPushToken:)
     func unregisterPushToken(config: [String: Any]) {
-        if Zendesk.instance == nil {
-            initializeInstance(config: config)
+        if Zendesk.instance != nil {
+            ZDKPushProvider(zendesk: Zendesk.instance!).unregisterForPush();
         }
-        ZDKPushProvider(zendesk: Zendesk.instance!).unregisterForPush();
-    }
-
-    @objc(registerPushToken:)
-    func registerPushToken(token: String) {
-        let locale = NSLocale.preferredLanguages.first ?? "en";
-        ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: token, locale: locale) { (pushResponse, error) in
-           
-        };
     }
 }

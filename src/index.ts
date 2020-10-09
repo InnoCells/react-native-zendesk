@@ -10,19 +10,9 @@ interface Config {
   deviceToken: string
 }
 
-// MARK: - Initialization
-
 export function initialize(config: Config) {
   RNZendesk.initialize(config)
 }
-
-// MARK: - Indentification
-
-export function identifyJWT(token: string) {
-  RNZendesk.identifyJWT(token)
-}
-
-// MARK: - UI Methods
 
 interface HelpCenterOptions {
   hideContactSupport?: boolean
