@@ -43,8 +43,8 @@ class RNZendesk: RCTEventEmitter {
         Support.initialize(withZendesk: Zendesk.instance)
     }
 
-    @objc(initializeAuth:)
-    func initializeAuth(config: [String: Any]) -> Void {
+    @objc(initialize:)
+    func initialize(config: [String: Any]) -> Void {
         guard
             let deviceToken = config["deviceToken"] as? String,
             let userId = config["userId"] as? String else { return }
@@ -65,12 +65,6 @@ class RNZendesk: RCTEventEmitter {
         Zendesk.instance?.setIdentity(identity)
     }
     
-    @objc(identifyAnonymous:email:)
-    func identifyAnonymous(name: String?, email: String?) {
-        let identity = Identity.createAnonymous(name: name, email: email)
-        Zendesk.instance?.setIdentity(identity)
-    }
-    
     // MARK: - UI Methods
     
     @objc(showHelpCenter:)
@@ -88,30 +82,6 @@ class RNZendesk: RCTEventEmitter {
             
             let nvc = UINavigationController(rootViewController: helpCenter)
             UIApplication.shared.keyWindow?.rootViewController?.present(nvc, animated: true, completion: nil)
-        }
-    }
-    
-    @objc(showNewTicket:)
-    func showNewTicket(with options: [String: Any]) {
-        DispatchQueue.main.async {
-            let config = RequestUiConfiguration()
-            if let tags = options["tags"] as? [String] {
-                config.tags = tags
-            }
-            let requestScreen = RequestUi.buildRequestUi(with: [config])
-            
-            let nvc = UINavigationController(rootViewController: requestScreen)
-            UIApplication.shared.keyWindow?.rootViewController?.present(nvc, animated: true, completion: nil)
-        }
-    }
-
-    @objc(showTicketList)
-    func showTicketList() {
-        DispatchQueue.main.async {
-            let requestListController = RequestUi.buildRequestList()
-            
-            let nvc = UINavigationController(rootViewController: requestListController)
-            UIApplication.shared.keyWindow?.rootViewController?.present(nvc, animated: true)
         }
     }
 

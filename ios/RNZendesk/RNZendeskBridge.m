@@ -13,22 +13,18 @@
 
 // MARK: - Initialization
 
-RCT_EXTERN_METHOD(initializeAuth:(NSDictionary *)config);
+RCT_EXTERN_METHOD(initialize:(NSDictionary *)config);
 
 // MARK: - Indentification
 
 RCT_EXTERN_METHOD(identifyJWT:(NSString *)token);
-RCT_EXTERN_METHOD(identifyAnonymous:(NSString *)name email:(NSString *)email);
 
 // MARK: - UI Methods
 
 RCT_EXTERN_METHOD(showHelpCenter:(NSDictionary *)options);
-RCT_EXTERN_METHOD(showNewTicket:(NSDictionary *)options);
-RCT_EXTERN_METHOD(showTicketList);
 
 // MARK: - Push tokens
 
-RCT_EXTERN_METHOD(registerPushToken);
 RCT_EXTERN_METHOD(unregisterPushToken);
 
 @end
