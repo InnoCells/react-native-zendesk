@@ -45,7 +45,7 @@ class RNZendesk: RCTEventEmitter {
         Zendesk.instance?.setIdentity(identity)
 
         let locale = NSLocale.preferredLanguages.first ?? "en";
-        ZDKPushProvider(zendesk: Zendesk.instance).register(deviceIdentifier: deviceToken, locale: locale) { (pushResponse, error) in
+        ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: deviceToken, locale: locale) { (pushResponse, error) in
            
         };
     }
