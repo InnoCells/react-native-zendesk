@@ -65,17 +65,17 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-     public void registerPushToken(String token, final) {
+     public void registerPushToken(String token) {
         if(Zendesk.INSTANCE.provider() != null) {
             Zendesk.INSTANCE.provider().pushRegistrationProvider().registerWithDeviceIdentifier(token, new ZendeskCallback<String>() {
                 @Override
                 public void onSuccess(String result) {
-                    
+
                 }
 
                 @Override
-                public void onError(ErrorResponse errorResponse) { 
-                    
+                public void onError(ErrorResponse errorResponse) {
+
                 }
             });
         }
