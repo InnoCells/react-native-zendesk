@@ -43,7 +43,7 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @ReactMethod
-    public void initializeInstance(ReadableMap config) {
+    public ReadableMap initializeInstance(ReadableMap config) {
         Zendesk.INSTANCE.init(getReactApplicationContext(), config.getString("zendeskUrl"), config.getString("appId"), config.getString("clientId"));
         Support.INSTANCE.init(Zendesk.INSTANCE);
 
@@ -53,7 +53,7 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @ReactMethod
     public void initializeAuth(ReadableMap config) {
-        this.zendeskInstance = initializeInstance(config);
+        initializeInstance(config);
         
         identifyJWT(config.getString("userId"));
 
@@ -65,7 +65,7 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     @ReactMethod
     public void identifyJWT(String token) {
         JwtIdentity identity = new JwtIdentity(token);
-        this.zendeskInstance.setIdentity(identity);
+        Zendesk.INSTANCE.setIdentity(identity);
     }
 
     @ReactMethod
@@ -75,36 +75,26 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
             .withEmailIdentifier(email)
             .build();
 
-        this.zendeskInstance.setIdentity(identity);
+        Zendesk.INSTANCE.setIdentity(identity);
     }
 
     // MARK: - UI Methods
 
     @ReactMethod
     public void showHelpCenter(ReadableMap options) {
-//        Boolean hideContact = options.getBoolean("hideContactUs") || false;
-        UiConfig hcConfig = HelpCenterActivity.builder()
-                .withContactUsButtonVisible(!(options.hasKey("hideContactSupport") && options.getBoolean("hideContactSupport")))
-                .config();
-
-        Intent intent = HelpCenterActivity.builder()
-                .withContactUsButtonVisible(true)
-                .intent(getReactApplicationContext(), hcConfig);
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getReactApplicationContext().startActivity(intent);
+        HelpCenterActivity.builder().show(getReactApplicationContext());
     }
     
     @ReactMethod
     public void showNewTicket(ReadableMap options) {
         ArrayList tags = options.getArray("tags").toArrayList();
 
-        Intent intent = RequestActivity.builder()
-                .withTags(tags)
-                .intent(getReactApplicationContext());
+        Configuration requestActivityConfig = RequestActivity.builder()
+            .withTags(tags)
+            .config();
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getReactApplicationContext().startActivity(intent);
+        HelpCenterActivity.builder()
+            .show(getReactApplicationContext(), requestActivityConfig);
     }
 
     @ReactMethod
@@ -118,34 +108,34 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void unregisterPushToken(ReadableMap config) {
-        if(this.zendeskInstance == null) {
-            this.zendeskInstance = initializeInstance(config);
+        if(Zendesk.INSTANCE == null) {
+            initializeInstance(config);
         }
-        this.zendeskInstance.provider().pushRegistrationProvider().unregisterDevice(new ZendeskCallback<Void>() {
+        Zendesk.INSTANCE.provider().pushRegistrationProvider().unregisterDevice(new ZendeskCallback<Void>() {
             @Override
-            public boolean onSuccess(final Void response) { 
-                return true;
+            public void onSuccess(final Void response) {
+
             }
 
             @Override
-            public boolean onError(ErrorResponse errorResponse) { 
-                return  false;
+            public void onError(ErrorResponse errorResponse) {
+
             }
         });
     }
 
     @ReactMethod
     public void registerPushToken(String token) {
-       this.zendeskInstance.provider().pushRegistrationProvider().registerWithDeviceIdentifier(token, new ZendeskCallback<String>() {
+       Zendesk.INSTANCE.provider().pushRegistrationProvider().registerWithDeviceIdentifier(token, new ZendeskCallback<String>() {
             @Override
-            public boolean onSuccess(String result) {
-                return true;
-             }
+            public void onSuccess(String result) {
+
+            }
 
             @Override
-            public boolean onError(ErrorResponse errorResponse) { 
-               return false;
+            public void onError(ErrorResponse errorResponse) {
+
             }
-       });
+        });
     }
 }

@@ -13,7 +13,7 @@
 
 // MARK: - Initialization
 
-RCT_EXTERN_METHOD(initialize:(NSDictionary *)config);
+RCT_EXTERN_METHOD(initializeAuth:(NSDictionary *)config);
 
 // MARK: - Indentification
 
