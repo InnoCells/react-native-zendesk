@@ -22,6 +22,6 @@ export function showHelpCenter(options: HelpCenterOptions = { hideContactSupport
   RNZendesk.showHelpCenter(options)
 }
 
-export function unregisterPushToken(config: { appId: string; clientId: string; zendeskUrl: string }) {
-  return RNZendesk.unregisterPushToken(config)
+export function unregisterPushToken() {
+  return RNZendesk.unregisterPushToken()
 }

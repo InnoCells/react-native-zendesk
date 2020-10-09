@@ -60,7 +60,7 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     }
     
     @ReactMethod
-    public void unregisterPushToken(ReadableMap config) {
+    public void unregisterPushToken() {
         if(Zendesk.INSTANCE.provider() != null) {
             Zendesk.INSTANCE.provider().pushRegistrationProvider().unregisterDevice(new ZendeskCallback<Void>() {
                 @Override
