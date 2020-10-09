@@ -70,8 +70,8 @@ class RNZendesk: RCTEventEmitter {
 
     @objc(unregisterPushToken:)
     func unregisterPushToken(config: [String: Any]) {
-        if Zendesk.instance != nil {
-            ZDKPushProvider(zendesk: Zendesk.instance!).unregisterForPush();
-        }
+        //if Zendesk.instance != nil {
+            // ZDKPushProvider(zendesk: Zendesk.instance!).unregisterForPush();
+       // }
     }
 }
