@@ -37,8 +37,11 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     public void initialize(ReadableMap config) {
         Zendesk.INSTANCE.init(getReactApplicationContext(), config.getString("zendeskUrl"), config.getString("appId"), config.getString("clientId"));
         Support.INSTANCE.init(Zendesk.INSTANCE);
-        
-        JwtIdentity identity = new JwtIdentity(config.getString("userId"));
+    }
+
+    @ReactMethod
+    public void identifyUser(String user) {
+        JwtIdentity identity = new JwtIdentity(user);
         Zendesk.INSTANCE.setIdentity(identity);
     }
 
@@ -49,33 +52,28 @@ public class RNZendeskBridge extends ReactContextBaseJavaModule {
     
     @ReactMethod
     public void unregisterPushToken() {
-        if(Zendesk.INSTANCE.provider() != null) {
-            Zendesk.INSTANCE.provider().pushRegistrationProvider().unregisterDevice(new ZendeskCallback<Void>() {
-                @Override
-                public void onSuccess(final Void response) {
+        Zendesk.INSTANCE.provider().pushRegistrationProvider().unregisterDevice(new ZendeskCallback<Void>() {
+            @Override
+            public void onSuccess(final Void response) { }
 
-                }
-
-                @Override
-                public void onError(ErrorResponse errorResponse) {
-
-                }
-            });
-        }
+            @Override
+            public void onError(ErrorResponse errorResponse) { }
+        });
     }
 
     @ReactMethod
-     public void registerPushToken(String token) {
+    public void registerPushToken(String token) {
         Zendesk.INSTANCE.provider().pushRegistrationProvider().registerWithDeviceIdentifier(token, new ZendeskCallback<String>() {
             @Override
-            public void onSuccess(String result) {
-
-            }
+            public void onSuccess(String result) { }
 
             @Override
-            public void onError(ErrorResponse errorResponse) {
-
-            }
+            public void onError(ErrorResponse errorResponse) { }
         });
+    }
+
+    @ReactMethod
+    public boolean isInitialized() {
+        return Zendesk.INSTANCE.provider() != null;
     }
 }

@@ -6,7 +6,6 @@ interface Config {
   appId: string
   clientId: string
   zendeskUrl: string
-  userId: string
 }
 
 export function initialize(config: Config) {
@@ -23,4 +22,12 @@ export function unregisterPushToken() {
 
 export function registerPushToken(deviceToken: string) {
   return RNZendesk.registerPushToken(deviceToken)
+}
+
+export function identifyUser(user: string) {
+  return RNZendesk.identifyUser(user)
+}
+
+export function isInitialized(): boolean {
+  return RNZendesk.isInitialized()
 }
