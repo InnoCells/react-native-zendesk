@@ -17,15 +17,15 @@ export function showHelpCenter() {
 }
 
 export function unregisterPushToken() {
-  return RNZendesk.unregisterPushToken()
+  RNZendesk.unregisterPushToken()
 }
 
 export function registerPushToken(deviceToken: string) {
-  return RNZendesk.registerPushToken(deviceToken)
+  RNZendesk.registerPushToken(deviceToken)
 }
 
 export function identifyUser(user: string) {
-  return RNZendesk.identifyUser(user)
+  RNZendesk.identifyUser(user)
 }
 
 export function isInitialized(): boolean {
